@@ -1,0 +1,56 @@
+POST http://192.168.1.65:4000/user/login HTTP/1.1
+
+{
+    "email":"hirasharma@gmail.com",
+    "password":"hiraksharma"
+}
+
+###
+
+POST http://192.168.1.65:4000/user/login HTTP/1.1
+content-type: application/json
+
+{
+    "email":"hirasharma@gmail.com",
+    "password":"hiraksharma"
+}
+
+###
+
+POST  http://100.64.208.107:4000/user/register HTTP/1.1 
+content-type: application/json
+
+{
+    "firstname":"Pramila",
+    "lastname":"Amatya",
+    "dob":"2000-02-07",
+    "state":"Bagmati Pradesh",
+    "occupation":"Realtor",
+    "email":"pramilaamatya@gmail.com",
+    "phonenumber":"9841135333", 
+    "password":"pramila"
+}
+
+###
+POST http://100.64.208.107:4000/user/property HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoaXJhc2hhcm1hQGdtYWlsLmNvbSIsImlhdCI6MTY0NTkyNDgzMSwiZXhwIjoxNjQ2MDExMjMxfQ.8pbUURZ7prq08-60fzrQn0X1-gL6e3DQvdTPk539Nrg
+
+{
+    "name":"House For Sale @ Satobato",
+    "streetaddress":"Motichowk-Tikathali",
+    "city":"Lalitpur",
+    "province":"Bagmati Pradesh",
+    "area":"5 Aana",
+    "type":"House",
+    "description":"In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available", 
+    "status":"Sell",  
+    "price":1000000,
+    "latitude":"27°39'27.6\"N",
+    "longitude":"85°21'27.7\"E"
+}
+
+###
+GET http://localhost:4000/user/property HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoaXJhc2hhcm1hQGdtYWlsLmNvbSIsImlhdCI6MTY0NjkwNTMwOSwiZXhwIjoxNjQ2OTkxNzA5fQ.oXZODma92DrnzRukXRZO0Nks0x2cqEH0OeB_7sK0PEM

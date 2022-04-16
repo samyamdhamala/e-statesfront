@@ -1,100 +1,61 @@
 class PropertyModel {
-  String title;
+  int id;
+  int customer_id;
+  String name;
+  String description;
   String streetaddress;
   String city;
   String province;
   String area;
+  int price;
+  String image;
+  String type;
   String longitude;
   String latitude;
-  String description;
-  String thumbnail;
-  List<String> images;
-  int price;
+  String status;
+  int likes;
+  bool hasLiked;
+  bool hasBookmarked;
+
   PropertyModel({
-    required this.title,
-    required this.streetaddress,
+    required this.id,
+    required this.customer_id,
+    required this.name,
     required this.description,
+    required this.streetaddress,
     required this.city,
-    required this.area,
     required this.province,
+    required this.area,
+    required this.price,
+    required this.image,
+    required this.type,
     required this.longitude,
     required this.latitude,
-    required this.thumbnail,
-    required this.images,
-    required this.price,
-  });
-}
-
-List<PropertyModel> properties = [
-  PropertyModel(
-    title: 'Penthouse Villa For Sale',
-    streetaddress: "St. Second Avenue 780, NY",
-    description:
-        'Est pariatur pariatur nisi cupidatat deserunt incididunt enim eiusmod do minim exercitation. Exercitation mollit enim officia cupidatat occaecat quis cillum cupidatat consectetur ad. Amet in dolore occaecat labore non anim. Laborum anim occaecat eiusmod occaecat ut sit. Est excepteur Lorem culpa deserunt anim duis quis anim ea in tempor exercitation exercitation. Veniam magna pariatur irure commodo mollit ut irure. Tempor aute consequat in labore magna sunt et commodo ut cupidatat.',
-    thumbnail: 'assets/images/properties/villa2.jpeg',
-    images: [
-      'assets/images/properties/villa1.jpeg',
-      'assets/images/properties/villa2.jpeg',
-      'assets/images/properties/villa3.jpeg'
-    ],
-    price: 3000000,
-    city: 'New York',
-    area: '500sqft',
-    province: 'New York',
-    longitude: '-73.9557413',
-    latitude: '40.6552076',
-  ),
-  PropertyModel(
-    title: 'Duplex Housing For Sale',
-    streetaddress: "St. Second Avenue 780, NY",
-    description:
-        'Est pariatur pariatur nisi cupidatat deserunt incididunt enim eiusmod do minim exercitation. Exercitation mollit enim officia cupidatat occaecat quis cillum cupidatat consectetur ad. Amet in dolore occaecat labore non anim. Laborum anim occaecat eiusmod occaecat ut sit. Est excepteur Lorem culpa deserunt anim duis quis anim ea in tempor exercitation exercitation. Veniam magna pariatur irure commodo mollit ut irure. Tempor aute consequat in labore magna sunt et commodo ut cupidatat.',
-    thumbnail: 'assets/images/properties/ap4.jpeg',
-    images: [
-      'assets/images/properties/ap2.jpeg',
-      'assets/images/properties/ap7.jpeg',
-      'assets/images/properties/ap6.jpeg'
-    ],
-    price: 50000000,
-    city: 'New York',
-    area: '500sqft',
-    province: 'New York',
-    longitude: '-73.9557413',
-    latitude: '40.6552076',
-  ),
-  PropertyModel(
-    title: 'Orchard House for Rent',
-    streetaddress: "St. Second Avenue 780, NY",
-    description:
-        'Est pariatur pariatur nisi cupidatat deserunt incididunt enim eiusmod do minim exercitation. Exercitation mollit enim officia cupidatat occaecat quis cillum cupidatat consectetur ad. Amet in dolore occaecat labore non anim. Laborum anim occaecat eiusmod occaecat ut sit. Est excepteur Lorem culpa deserunt anim duis quis anim ea in tempor exercitation exercitation. Veniam magna pariatur irure commodo mollit ut irure. Tempor aute consequat in labore magna sunt et commodo ut cupidatat.',
-    thumbnail: 'assets/images/properties/ap6.jpeg',
-    images: [
-      'assets/images/properties/ap4.jpeg',
-      'assets/images/properties/ap5.jpeg',
-      'assets/images/properties/ap6.jpeg'
-    ],
-    price: 6000000,
-    city: 'New York',
-    area: '500sqft',
-    province: 'New York',
-    longitude: '-73.9557413',
-    latitude: '40.6552076',
-  ),
-];
-
-class GetPost {
-  final String message;
-  final String data;
-
-  GetPost({
-    required this.message,
-    required this.data,
+    required this.status,
+    required this.likes,
+    required this.hasLiked,
+    required this.hasBookmarked,
   });
 
-  factory GetPost.toJson(Map<String, dynamic> json) {
-    return GetPost(
-      message: json['message'],
-      data: json['data'],
+  factory PropertyModel.fromJson(Map<String, dynamic> json) {
+    return PropertyModel(
+      id: json['id'],
+      customer_id: json['customer_id'],
+      name: json['name'],
+      description: json['description'],
+      streetaddress: json['streetaddress'],
+      city: json['city'],
+      province: json['province'],
+      area: json['area'],
+      price: json['price'],
+      image: json['image'],
+      type: json['type'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      status: json['status'],
+      likes: json['likes'],
+      hasLiked: json['hasLiked'],
+      hasBookmarked: json['hasBookmarked'],
     );
   }
 }

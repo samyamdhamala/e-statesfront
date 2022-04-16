@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:login/login_feature/register_post_method.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -21,17 +23,35 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 @immutable
-class PageBuilder extends StatelessWidget {
+class PageBuilder extends StatefulWidget {
   PageBuilder({Key? key}) : super(key: key);
 
+  @override
+  State<PageBuilder> createState() => _PageBuilderState();
+}
+
+class _PageBuilderState extends State<PageBuilder> {
+  bool _obscureText = true;
+  DateTime date = DateTime(2022, 4, 13);
+
+  TextEditingController _date = new TextEditingController();
+
   final _registerKey = GlobalKey<FormState>();
+
   late String firstName = '';
+
   late String lastName = '';
+
   late String state = '';
+
   late String dob = '';
+
   late String occupation = '';
+
   late String email = '';
+
   late String phoneno = '';
+
   late String password = '';
 
   @override
@@ -39,48 +59,90 @@ class PageBuilder extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Image.asset('assets/images/register.png'),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+            child: Image.asset('assets/images/register.png'),
+          ),
           Container(
-            child: const Text(
+            child: Text(
               'Create an Account',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              style: GoogleFonts.lato(
+                  color: Color.fromRGBO(120, 121, 241, 1),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500),
             ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           Form(
             key: _registerKey,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(children: [
+                Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: TextFormField(
+                          validator:
+                              RequiredValidator(errorText: "Cannot be Empty"),
+                          onSaved: (value) {
+                            firstName = value.toString();
+                          },
+                          decoration: InputDecoration(
+                              labelText: 'First Name',
+                              labelStyle:
+                                  Theme.of(context).textTheme.labelMedium)),
+                    ),
+                    Spacer(),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: TextFormField(
+                          validator:
+                              RequiredValidator(errorText: "Cannot be Empty"),
+                          onSaved: (value) {
+                            lastName = value.toString();
+                          },
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(Icons.person),
+                              labelText: 'Last Name',
+                              labelStyle:
+                                  Theme.of(context).textTheme.labelMedium)),
+                    ),
+                  ],
+                ),
                 TextFormField(
-                    validator: RequiredValidator(
-                        errorText: "Please enter a valid first name."),
-                    onSaved: (value) {
-                      firstName = value.toString();
-                    },
-                    decoration: InputDecoration(
-                        labelText: 'First Name',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
-                TextFormField(
-                    validator: RequiredValidator(
-                        errorText: "Please enter a valid Last Name."),
-                    onSaved: (value) {
-                      lastName = value.toString();
-                    },
-                    decoration: InputDecoration(
-                        labelText: 'Last Name',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
-                TextFormField(
+                    readOnly: true,
+                    controller: _date,
+                    autocorrect: false,
                     validator: RequiredValidator(
                         errorText: "Please enter a valid dob."),
+                    onTap: () async {
+                      DateTime? newDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2023),
+                      );
+                      //if cancel null is returned
+                      if (newDate == null) return;
+
+                      //if newDate is not null then set the date
+                      setState(() {
+                        date = newDate;
+                        print(date.toString());
+                        // _date.value = TextEditingValue(text: date.toString());
+                        _date.text = DateFormat.yMd().format(date);
+                      });
+                    },
                     onSaved: (value) {
                       dob = value.toString();
                     },
                     decoration: InputDecoration(
-                        labelText: 'DOB',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
+                        suffixIcon: Icon(Icons.calendar_month_sharp),
+                        labelText: 'Date Of Birth',
+                        labelStyle: Theme.of(context).textTheme.labelMedium)),
                 TextFormField(
                     validator: RequiredValidator(
                         errorText: "Please enter a valid State."),
@@ -88,9 +150,9 @@ class PageBuilder extends StatelessWidget {
                       state = value.toString();
                     },
                     decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.location_city),
                         labelText: 'State',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
+                        labelStyle: Theme.of(context).textTheme.labelMedium)),
                 TextFormField(
                     validator: RequiredValidator(
                         errorText: "Please enter a valid Occupation."),
@@ -98,9 +160,9 @@ class PageBuilder extends StatelessWidget {
                       occupation = value.toString();
                     },
                     decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.work),
                         labelText: 'Occupation',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
+                        labelStyle: Theme.of(context).textTheme.labelMedium)),
                 TextFormField(
                     onSaved: (value) {
                       email = value.toString();
@@ -110,9 +172,9 @@ class PageBuilder extends StatelessWidget {
                       EmailValidator(errorText: "Please enter a valid email"),
                     ]),
                     decoration: InputDecoration(
-                        labelText: 'Email Name',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
+                        suffixIcon: Icon(Icons.mail),
+                        labelText: 'Email Address',
+                        labelStyle: Theme.of(context).textTheme.labelMedium)),
                 TextFormField(
                     onSaved: (value) {
                       phoneno = value.toString();
@@ -120,20 +182,32 @@ class PageBuilder extends StatelessWidget {
                     validator: RequiredValidator(
                         errorText: "Please enter a valid Phone Number."),
                     decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.phone),
                         labelText: 'Phone Number',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
+                        labelStyle: Theme.of(context).textTheme.labelMedium)),
                 TextFormField(
                     onSaved: (value) {
                       password = value.toString();
                     },
                     validator: RequiredValidator(
                         errorText: "Please enter your password!"),
-                    obscureText: true,
+                    obscureText: _obscureText,
                     decoration: InputDecoration(
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          child: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                        ),
                         labelText: 'Password',
-                        labelStyle:
-                            TextStyle(color: Color.fromRGBO(40, 32, 175, 1)))),
+                        labelStyle: Theme.of(context).textTheme.labelMedium)),
               ]),
             ),
           ),
@@ -231,7 +305,6 @@ class TextFieldWidget extends StatelessWidget {
           hintText: labelText,
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(
-              color: Colors.black,
               width: 2.0,
             ),
           ),

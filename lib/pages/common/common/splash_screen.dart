@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:login/pages/home_page.dart';
-import 'package:login/pages/login_page.dart';
-
-import '../token_shared_preferences.dart';
+import 'package:login/pages/common/common/home_page.dart';
+import 'package:login/pages/common/common/login_page.dart';
+import '../../../token_shared_preferences.dart';
 
 // import 'features/register/presentation/screens/register_page.dart';
 
@@ -39,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('Splash Screen')),
+      body: Center(child: Image(image: AssetImage('assets/images/logo.png'))),
     );
   }
 }

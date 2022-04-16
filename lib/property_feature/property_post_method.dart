@@ -1,10 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:login/api/endpoint.dart';
 import 'package:login/token_shared_preferences.dart';
+import 'package:http_parser/http_parser.dart';
 
 class PropertyPostMethod {
   final String streetaddress;
@@ -18,7 +18,7 @@ class PropertyPostMethod {
   final String type;
   final String status;
   final int price;
-  File? image;
+  final List<File>? image;
 
   PropertyPostMethod({
     required this.name,
@@ -36,19 +36,18 @@ class PropertyPostMethod {
   });
 
   Future<String> createProperty() async {
+   
     final Uri url = Uri.parse(postNewPropertyEndPoint);
     String tokenValue =
         await TokenSharedPrefernces.instance.getTokenValue("token");
-    final header = {
-      "content-type": "application/json",
-      "Authorization": tokenValue
+
+    Map<String, String> headers = {
+      "content-Type": "application/json",
+      "Authorization": tokenValue,
     };
 
-    debugPrint('This is the token value ${tokenValue}');
-    debugPrint(image!.path);
-
     var request = http.MultipartRequest("POST", url);
-    request.headers.addAll(header);
+    request.headers.addAll(headers);
     request.fields['name'] = name;
     request.fields['streetaddress'] = streetaddress;
     request.fields['city'] = city;
@@ -60,25 +59,35 @@ class PropertyPostMethod {
     request.fields['type'] = type;
     request.fields['status'] = status;
     request.fields['price'] = price.toString();
-    var pic = await http.MultipartFile.fromPath('propertyImage', image!.path);
-    request.files.add(pic);
 
-    debugPrint('This is the sent name: ${request.fields['name']}');
+    debugPrint('This is the image path: ${image![0].path}');
+
+
+
+    for (var images in image!) {
+      var pic = await http.MultipartFile.fromPath(
+        "propertyImage",
+        images.path,
+        filename: 'image.jpg',
+        contentType: MediaType('image', 'jpg'),
+      );
+      print(pic);
+      request.files.add(pic);
+    }
 
     var response = await request.send();
 
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
+    debugPrint(request.toString());
     print('This is the response ${responseString}');
 
-    debugPrint('This is the status code: ${response.statusCode}');
+    debugPrint('This is the status code: ${(response.statusCode).toString()}');
 
     if (response.statusCode == 200) {
-      return "Post Created Successfully";
+      return "Sucess";
     } else {
-      throw "Invalid Credentials";
+      return "response code: ${response.statusCode}";
     }
   }
 }
-
-

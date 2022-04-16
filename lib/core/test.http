@@ -17,7 +17,7 @@ content-type: application/json
 
 ###
 
-POST  http://100.64.208.107:4000/user/register HTTP/1.1 
+POST  http://localhost:4000/user/register HTTP/1.1 
 content-type: application/json
 
 {
@@ -53,4 +53,10 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoaXJh
 ###
 GET http://localhost:4000/user/property HTTP/1.1
 content-type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoaXJhc2hhcm1hQGdtYWlsLmNvbSIsImlhdCI6MTY0NjkwNTMwOSwiZXhwIjoxNjQ2OTkxNzA5fQ.oXZODma92DrnzRukXRZO0Nks0x2cqEH0OeB_7sK0PEM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoaXJhc2hhcm1hQGdtYWlsLmNvbSIsImlhdCI6MTY0ODExNzc2NCwiZXhwIjoxNjQ4MjA0MTY0fQ.iqdkTnzFT522GNVFMbPlhwWtz4GWMUw0br93xtX4cWM
+
+
+###
+GET http://127.0.0.1:4000/images/1648115042508-2.jpg HTTP/1.1
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJoaXJhc2hhcm1hQGdtYWlsLmNvbSIsImlhdCI6MTY0ODExNzc2NCwiZXhwIjoxNjQ4MjA0MTY0fQ.iqdkTnzFT522GNVFMbPlhwWtz4GWMUw0br93xtX4cWM

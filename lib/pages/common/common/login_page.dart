@@ -1,25 +1,35 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:login/login_feature/login_post_method.dart';
-import 'package:login/models/login.dart';
-import 'package:login/models/user.dart';
-import 'package:login/pages/home_page.dart';
-import 'package:login/pages/register_page.dart';
-import 'package:login/property_feature/all_property_get_method.dart';
+import 'package:login/pages/common/common/home_page.dart';
+import 'package:login/pages/common/common/register_page.dart';
+import 'package:login/property_feature/get_all_property.dart';
 import 'package:login/token_shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MyLoginState createState() => _MyLoginState();
 }
 
 class _MyLoginState extends State<LoginPage> {
-  late Map<String, dynamic> getData;
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<dynamic> getData() async {
+    getterData = await GetAllProperty.getAllPropertyInit();
+    return getterData;
+  }
+
+  late Map<String, dynamic> getterData;
   final _signUpFormKey = GlobalKey<FormState>();
+  bool _obscureText = true;
   late String email = '';
   late String password = '';
   late Map<String, dynamic> data;
@@ -29,7 +39,6 @@ class _MyLoginState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -40,37 +49,37 @@ class _MyLoginState extends State<LoginPage> {
                     Container(
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage('assets/images/loginpeople.png'),
-                            fit: BoxFit.cover),
+                          image: AssetImage('assets/images/loginpeople.png'),
+                          fit: BoxFit.fitHeight,
+                          alignment: Alignment.topRight,
+                        ),
                       ),
-                      height: 300,
+                      height: 270,
                       width: MediaQuery.of(context).size.width,
                     ),
                     Container(
-                      padding: const EdgeInsets.only(left: 15, top: 80),
-                      child: const Text('Already\nHave\nAn\nAccount?',
-                          style: TextStyle(
-                              color: Color.fromRGBO(48, 48, 48, 0.74),
-                              fontSize: 34,
-                              fontWeight: FontWeight.w500)),
+                      padding: const EdgeInsets.only(left: 15, top: 150),
+                      child: Text(
+                        'Already\nHave\nAn\nAccount?',
+                        style: GoogleFonts.lato(
+                            color: Color.fromRGBO(48, 48, 48, 0.74),
+                            fontSize: 34,
+                            fontWeight: FontWeight.w500),
+                      ),
                     )
                   ],
                 ),
               ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Form(
                 key: _signUpFormKey,
                 child: Container(
-                  padding: EdgeInsets.only(
-                      //top: MediaQuery.of(context).size.height * 0.45,
-                      left: 55,
-                      right: 75),
+                  padding: EdgeInsets.only(left: 55, right: 75),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Email',
-                          style: TextStyle(
-                              color: Color.fromRGBO(40, 32, 175, 1),
-                              fontSize: 16)),
+                      Text('Email',
+                          style: Theme.of(context).textTheme.labelMedium),
                       TextFormField(
                         onSaved: (value) {
                           email = value.toString();
@@ -81,6 +90,7 @@ class _MyLoginState extends State<LoginPage> {
                           EmailValidator(
                               errorText: "Please enter a valid email"),
                         ]),
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: 'example@mail.com',
                           // labelText: 'Email',
@@ -89,19 +99,32 @@ class _MyLoginState extends State<LoginPage> {
                       const SizedBox(
                         height: 30,
                       ),
-                      const Text('Password',
-                          style: TextStyle(
-                              color: Color.fromRGBO(40, 32, 175, 1),
-                              fontSize: 16)),
+                      Text(
+                        'Password',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
                       TextFormField(
                         onSaved: (value) {
                           password = value.toString();
                         },
                         validator: RequiredValidator(
                             errorText: "Please enter your password!"),
-                        obscureText: true,
+                        obscureText: _obscureText,
                         decoration: InputDecoration(
-                          hintText: '****************',
+                          hintText: 'Enter your password',
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            child: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -132,7 +155,8 @@ class _MyLoginState extends State<LoginPage> {
                                 .createLogin();
                             if (data["message"] == "Success") {
                               String token = data["token"];
-                              String userName = data["user"]["firstName"];
+                              String firstName = data["user"]["firstName"];
+                              String lastName = data["user"]["lastName"];
                               String email = data["user"]["email"];
                               debugPrint('$email');
                               user = data["user"];
@@ -143,21 +167,19 @@ class _MyLoginState extends State<LoginPage> {
                               TokenSharedPrefernces.instance
                                   .setTokenValue("token", tokenData);
                               TokenSharedPrefernces.instance
-                                  .setNameValue("userName", userName);
+                                  .setNameValue("firstName", firstName);
+                              TokenSharedPrefernces.instance
+                                  .setNameValue("lastName", lastName);
                               TokenSharedPrefernces.instance
                                   .setEmailValue("email", email);
 
-                              getData =
-                                  await AllPropertyGetMethod.getAllProperty();
-
-                              debugPrint(
-                                  'This is the gotten data ${getData.toString()}');
                               debugPrint(user["firstName"].toString());
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => HomePage(
                                             userData: user,
+                                            dataList: getterData,
                                           )));
                             } else {
                               AlertDialog alert = AlertDialog(
@@ -198,7 +220,7 @@ class _MyLoginState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 30,
                       ),
                       Center(
                           child: Text('Dont Have an Account Yet?',

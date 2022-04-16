@@ -2,61 +2,30 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:login/pages/widgets/search_location_page.dart';
+import 'package:login/models/property_model.dart';
+import 'package:login/pages/common/common/home_page.dart';
+import 'package:login/pages/display_for_own_property/own_property_listings.dart';
 import 'package:login/property_feature/property_post_method.dart';
-import 'common/common/home_page.dart';
+import 'package:login/property_feature/update_own_property.dart';
 
-class AddProperty extends StatefulWidget {
-  const AddProperty({Key? key}) : super(key: key);
+class UpdateProperty extends StatefulWidget {
+  final PropertyModel property;
+  const UpdateProperty({required this.property});
 
   @override
-  State<AddProperty> createState() => _AddPropertyState();
+  State<UpdateProperty> createState() => _UpdatePropertyState();
 }
 
-class _AddPropertyState extends State<AddProperty> {
+class _UpdatePropertyState extends State<UpdateProperty> {
   ValueNotifier<GeoPoint?> notifier = ValueNotifier(null);
-//for dropdowns
+
+  //for dropdowns
   String dropdownValue = 'House';
   String dropdownValue2 = 'For Sale';
-  String dropdownValue3 = 'Aana';
 
-  final ImagePicker _picker = ImagePicker();
-  List<File>? _imageFileList = [];
-  // File? _image;
-
-  // Future getImage() async {
-  //   try {
-  //     final _image = await ImagePicker().pickImage(source: ImageSource.gallery);
-  //     // final _image = await ImagePicker().pickMultiImage();
-  //     if (_image == null) {
-  //       return;
-  //     }
-  //     final File imageTemp = File(_image.path);
-  //     debugPrint(imageTemp.toString());
-  //     setState(() {
-  //       this._image = imageTemp;
-  //     });
-  //   } on PlatformException catch (e) {
-  //     print('Failed to pick image ${e}');
-  //   }
-  // }
-
-  void selectImages() async {
-    var selectedImages = await _picker.pickMultiImage();
-    selectedImages!.forEach((image) {
-      setState(() {
-        _imageFileList!.add(File(image.path));
-      });
-    });
-
-    print("Image list length : " + _imageFileList!.length.toString());
-    setState(() {});
-  }
-
-  final _propertyFormKey = GlobalKey<FormState>();
+  final _updatepropertyFormKey = GlobalKey<FormState>();
   TextEditingController nae = TextEditingController();
-  TextEditingController street = TextEditingController();
+  TextEditingController streetTxt = TextEditingController();
   TextEditingController cityText = TextEditingController();
   TextEditingController provinceText = TextEditingController();
   TextEditingController priceText = TextEditingController();
@@ -73,24 +42,37 @@ class _AddPropertyState extends State<AddProperty> {
   String type = 'House';
   late String description;
   String status = 'For Sale';
-  String unit = 'Aana';
   late String latitude;
   late String longitude;
-  late String image;
+
+  @override
+  void initState() {
+    super.initState();
+    nae.text = widget.property.name;
+    cityText.text = widget.property.city;
+    provinceText.text = widget.property.province;
+    priceText.text = widget.property.price.toString();
+    descriptionText.text = widget.property.description;
+    areaText.text = widget.property.area;
+    latitudeText.text = widget.property.latitude;
+    longitudeText.text = widget.property.longitude;
+    dropdownValue = widget.property.type;
+    dropdownValue2 = widget.property.status;
+    streetTxt.text = widget.property.streetaddress;
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // backgroundColor: Colors.grey[300],
         appBar: AppBar(
-          title: Text('Post New Property'),
+          title: Text('Update Property'),
         ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Form(
-              key: _propertyFormKey,
+              key: _updatepropertyFormKey,
               child: Column(
                 children: [
                   Row(
@@ -219,87 +201,25 @@ class _AddPropertyState extends State<AddProperty> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Property Area*',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle1),
-                                  Container(
-                                    height: 30,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
-                                    child: TextFormField(
-                                      controller: street,
-                                      onSaved: (value) {
-                                        setState(() {
-                                          areaText.text = value!;
-                                          area = areaText.toString();
-                                        });
-                                      },
-                                      validator: MultiValidator([
-                                        RequiredValidator(
-                                            errorText: "Cannot be Empty"),
-                                        PatternValidator((r'(^[0-9]+$)'),
-                                            errorText: "Numbers Only"),
-                                      ]),
-                                      keyboardType: TextInputType.number,
-                                    ),
-                                  ),
-                                ],
+                          TextFormField(
+                            controller: areaText,
+                            onSaved: (value) {
+                              setState(() {
+                                areaText.text = value!;
+                                area = areaText.toString();
+                              });
+                            },
+                            validator: MultiValidator([
+                              RequiredValidator(errorText: "Cannot be Empty"),
+                            ]),
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Property Area*',
+                              labelStyle: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 16,
                               ),
-                              Column(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(top: 8),
-                                    child: Text('Area Unit*',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    child: DropdownButton<String>(
-                                      value: dropdownValue3,
-                                      icon: const Icon(
-                                        Icons.arrow_downward,
-                                        size: 24,
-                                      ),
-                                      elevation: 50,
-                                      style: const TextStyle(
-                                          color: Colors.deepPurple),
-                                      underline: Container(
-                                        height: 1,
-                                        color: Colors.grey.shade700,
-                                      ),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          dropdownValue3 = newValue!;
-                                          unit = dropdownValue3;
-                                        });
-                                      },
-                                      items: <String>[
-                                        'Aana',
-                                        'Ropani',
-                                        'Sq.Feet',
-                                        'Dhur',
-                                        'Bigha'
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
                           TextFormField(
                             controller: priceText,
@@ -348,13 +268,13 @@ class _AddPropertyState extends State<AddProperty> {
                       Column(
                         children: [
                           TextFormField(
-                            controller: cityText,
+                            controller: streetTxt,
                             validator:
                                 RequiredValidator(errorText: "Cannot be Empty"),
                             onSaved: (value) {
                               setState(() {
-                                street.text = value!;
-                                streetaddress = street.toString();
+                                streetTxt.text = value!;
+                                streetaddress = streetTxt.toString();
                               });
                             },
                             decoration: const InputDecoration(
@@ -369,6 +289,7 @@ class _AddPropertyState extends State<AddProperty> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: cityText,
                             validator:
                                 RequiredValidator(errorText: "Cannot be Empty"),
                             onSaved: (value) {
@@ -406,72 +327,57 @@ class _AddPropertyState extends State<AddProperty> {
                               Text('GPS Coordinates*',
                                   style: Theme.of(context).textTheme.subtitle1),
                               Spacer(),
-                              Column(
-                                children: [
-                                  Column(
-                                    children: [
-                                      ElevatedButton.icon(
-                                        icon: const Icon(
-                                          Icons.gps_fixed,
-                                          size: 16,
-                                          color: Colors.white,
-                                        ),
-                                        label: const Text('Get Location',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white)),
-                                        onPressed: () async {
-                                          var p = await Navigator.pushNamed(
-                                              context, "/search");
-                                          if (p != null) {
-                                            notifier.value = p as GeoPoint;
-                                            setState(() {
-                                              latitudeText.text =
-                                                  p.latitude.toString();
-                                              longitudeText.text =
-                                                  p.longitude.toString();
-                                            });
-                                          }
-                                        },
+                              ElevatedButton.icon(
+                                icon: const Icon(
+                                  Icons.gps_fixed,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
+                                label: const Text('Get Location',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.white)),
 
-                                        // onPressed: () async {
-                                        //   var p =
-                                        //       await showSimplePickerLocation(
-                                        //     context: context,
-                                        //     isDismissible: true,
-                                        //     title:
-                                        //         "Select Your Property Location",
-                                        //     textConfirmPicker: "Pick",
-                                        //     initCurrentUserPosition: false,
-                                        //     initZoom: 12,
-                                        //     titleStyle: TextStyle(fontSize: 16),
-                                        //     initPosition: GeoPoint(
-                                        //         latitude: 27.66548398301448,
-                                        //         longitude: 85.357267861246),
-                                        //     radius: 10,
-                                        //   );
-                                        //   if (p != null) {
-                                        //     notifier.value = p;
-                                        //     setState(() {
-                                        //       latitudeText.text =
-                                        //           p.latitude.toString();
-                                        //       longitudeText.text =
-                                        //           p.longitude.toString();
-                                        //     });
-                                        //   }
-                                        // },
-                                        style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Color.fromARGB(255, 84, 93, 218),
-                                          shape: new RoundedRectangleBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      30.0)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                onPressed: () async {
+                                  var p = await Navigator.pushNamed(
+                                      context, "/search");
+                                  if (p != null) {
+                                    notifier.value = p as GeoPoint;
+                                    setState(() {
+                                      latitudeText.text = p.latitude.toString();
+                                      longitudeText.text =
+                                          p.longitude.toString();
+                                    });
+                                  }
+                                },
+                                // onPressed: () async {
+                                //   var p = await showSimplePickerLocation(
+                                //     context: context,
+                                //     isDismissible: true,
+                                //     title: "Select Your Property Location",
+                                //     textConfirmPicker: "Pick",
+                                //     initCurrentUserPosition: false,
+                                //     initZoom: 12,
+                                //     titleStyle: TextStyle(fontSize: 16),
+                                //     initPosition: GeoPoint(
+                                //         latitude: 27.66548398301448,
+                                //         longitude: 85.357267861246),
+                                //     radius: 10,
+                                //   );
+                                //   if (p != null) {
+                                //     notifier.value = p;
+                                //     setState(() {
+                                //       latitudeText.text = p.latitude.toString();
+                                //       longitudeText.text =
+                                //           p.longitude.toString();
+                                //     });
+                                //   }
+                                // },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 84, 93, 218),
+                                  shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(30.0)),
+                                ),
                               )
                             ],
                           ),
@@ -480,7 +386,6 @@ class _AddPropertyState extends State<AddProperty> {
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.45,
                                 child: TextFormField(
-                                  readOnly: true,
                                   controller: latitudeText,
                                   validator: RequiredValidator(
                                       errorText: "Cannot be Empty"),
@@ -502,7 +407,6 @@ class _AddPropertyState extends State<AddProperty> {
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.45,
                                 child: TextFormField(
-                                  readOnly: true,
                                   controller: longitudeText,
                                   validator: RequiredValidator(
                                       errorText: "Cannot be Empty"),
@@ -578,106 +482,30 @@ class _AddPropertyState extends State<AddProperty> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        color: Colors.grey[400],
-                        height: 40,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              '  Images',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 18,
-                                color: Color.fromARGB(188, 56, 55, 55),
-                              ),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  selectImages();
-                                },
-                                icon: Icon(
-                                  Icons.add_photo_alternate,
-                                  color: Color(0xff766FE7),
-                                ))
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        color: Color.fromARGB(117, 183, 181, 181),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: GridView.builder(
-                                  itemCount: _imageFileList!.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Image.file(
-                                      File(_imageFileList![index].path),
-                                      fit: BoxFit.cover,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Container(
-                      //   height: MediaQuery.of(context).size.height * 0.3,
-                      //   width: MediaQuery.of(context).size.width,
-                      //   child: _image != null
-                      //       ? Image.file(_image!)
-                      //       : Center(
-                      //           child: Text(
-                      //             'No image Selected',
-                      //           ),
-                      //         ),
-                      // ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
                   InkWell(
                     // When the user taps the button, show a snackbar.
                     onTap: () async {
-                      if (_propertyFormKey.currentState!.validate()) {
-                        _propertyFormKey.currentState!.save();
-                        String data = await PropertyPostMethod(
+                      if (_updatepropertyFormKey.currentState!.validate()) {
+                        _updatepropertyFormKey.currentState!.save();
+                        String data = await UpdateOwnProperty(
+                          id: widget.property.id.toString(),
                           name: nae.text,
-                          streetaddress: street.text,
+                          streetaddress: streetTxt.text,
                           description: descriptionText.text,
-                          city: city,
-                          area: areaText.text + ' ' + unit,
-                          price: int.parse(priceText.text),
+                          city: cityText.text,
+                          area: areaText.text,
                           province: provinceText.text,
                           longitude: longitudeText.text,
                           latitude: latitudeText.text,
                           type: type,
                           status: status,
-                          image: _imageFileList,
-                        ).createProperty();
+                          price: int.parse(priceText.text),
+                        ).updateProperty();
                         debugPrint('This is the sucess data ${data}');
-                        if (data == "Sucess") {
+                        if (data == "success") {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Posted Successfully'),
+                              content: Text('Updated Successfully'),
                             ),
                           );
                           Navigator.pop(context);
@@ -685,7 +513,7 @@ class _AddPropertyState extends State<AddProperty> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()));
+                                  builder: (context) => OwnPropertyListings()));
                         } else {
                           AlertDialog alert = AlertDialog(
                             title: const Text('Invalid Details'),
@@ -714,7 +542,7 @@ class _AddPropertyState extends State<AddProperty> {
                           color: Color.fromRGBO(120, 121, 241, 1)),
                       child: Center(
                         child: Text(
-                          'Save',
+                          'Update',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -733,7 +561,3 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 }
-
-// String selectPriceUnit = '';
-// final priceunitSelected = TextEditingController();
-// List<String> priceunit = ["Ropani", "Aana", "Bigha", "Kanal", "Sq ft", "Only"];

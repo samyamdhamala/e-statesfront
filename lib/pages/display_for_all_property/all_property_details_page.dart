@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:login/api/endpoint.dart';
 import 'package:login/models/property_model.dart';
 import 'package:login/pages/webviewtest.dart';
 import 'package:login/property_feature/bookmark_property.dart';
-import 'package:login/property_feature/get_all_property.dart';
 import 'package:login/property_feature/get_owner_contact.dart';
 import 'package:login/token_shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,8 +32,10 @@ class _PropertyDetailsState extends State<PropertyDetails> {
   String? _ownerLastName;
   String? _ownerEmail;
   String? _ownerPhone;
-  var tokenValue;
+  DateTime date = DateTime(2022, 4, 13);
 
+  var tokenValue;
+  final _formKey = GlobalKey<FormState>();
   Map<String, dynamic> userDetails = {};
   @override
   void initState() {
@@ -41,10 +44,10 @@ class _PropertyDetailsState extends State<PropertyDetails> {
     getOwnerContact();
   }
 
+  TextEditingController _date = new TextEditingController();
   Future<dynamic> getOwnerContact() async {
     userDetails = await GetOwnerContact.getOwnerContact(
         widget.propertyModel.customer_id.toString());
-    debugPrint('This is phone: ${_ownerPhone}');
     setState(() {
       _ownerFirstName = userDetails['firstName'];
       _ownerLastName = userDetails['lastName'];
@@ -60,9 +63,11 @@ class _PropertyDetailsState extends State<PropertyDetails> {
     final lastPrefs =
         await TokenSharedPrefernces.instance.getNameValue('lastName');
     debugPrint("This is the lastname ${lastPrefs}");
+
     setState(() {
       _userName = prefs;
       _lastName = lastPrefs;
+   
     });
   }
 
@@ -186,13 +191,15 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              specWidget(
-                                context,
-                                LineIcons.dollarSign,
-                                "Rs ${widget.propertyModel.price}/- only",
-                              ),
                               specWidget(context, LineIcons.areaChart,
                                   widget.propertyModel.area),
+                              specWidget(
+                                context,
+                                LineIcons.indianRupeeSign,
+                                "Rs. ${widget.propertyModel.price}",
+                              ),
+                              specWidget(context, LineIcons.eye,
+                                  widget.propertyModel.status),
                             ],
                           ),
                         ),
@@ -461,7 +468,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      // padding: const EdgeInsets.all(8),
                       margin: const EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -482,7 +489,16 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                       height: 55,
                       width: 55,
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          final phoneNumber = '+977${_ownerPhone}';
+                          final url = 'tel:$phoneNumber';
+
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
                         child: Icon(
                           LineIcons.phone,
                           size: 30,
@@ -534,7 +550,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                     //   ),
                     // ),
                     SpeedDial(
-                      label: Text('Contact Options'),
+                      label: Text('     More Options'),
                       animatedIcon: AnimatedIcons.list_view,
                       foregroundColor: Colors.white,
                       backgroundColor: Color.fromARGB(234, 126, 117, 241),
@@ -582,22 +598,31 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                             }
                           },
                         ),
-                        SpeedDialChild(
-                          onTap: () async {
-                            final toEmail = _ownerEmail;
-                            final subject =
-                                'Permission to visit site for Inspection';
-                            final body =
-                                'Dear Sir/Madam,\n\nI would like to visit your site for inspection. Please provide me with a viable time for inspection.\n\nRegards,\n$_userName $_lastName';
-                            final url =
-                                'mailto:$toEmail?subject=$subject&body=$body';
+                        // SpeedDialChild(
+                        //   onTap: () async {
+                        //     final toEmail = _ownerEmail;
+                        //     final subject =
+                        //         'Permission to visit site for Inspection';
+                        //     final body =
+                        //         'Dear Sir/Madam,\n\nI would like to visit your site for inspection. Please provide me with a viable time for inspection.\n\nRegards,\n$_userName $_lastName';
+                        //     final url =
+                        //         'mailto:$toEmail?subject=$subject&body=$body';
 
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          },
+                        //     if (await canLaunch(url)) {
+                        //       await launch(url);
+                        //     } else {
+                        //       throw 'Could not launch $url';
+                        //     }
+                        //   },
+                        //   child: Icon(
+                        //     Icons.mail,
+                        //     size: 30,
+                        //     color: Colors.white,
+                        //   ),
+                        //   backgroundColor: Color.fromARGB(255, 60, 141, 218),
+                        //   label: "Request for Inspection",
+                        // ),
+                        SpeedDialChild(
                           child: Icon(
                             Icons.mail,
                             size: 30,
@@ -605,7 +630,127 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                           ),
                           backgroundColor: Color.fromARGB(255, 60, 141, 218),
                           label: "Request for Inspection",
-                        ),
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: <Widget>[
+                                        Positioned(
+                                          right: -40.0,
+                                          top: -40.0,
+                                          child: InkResponse(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: CircleAvatar(
+                                              child: Icon(Icons.close),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                        Form(
+                                          key: _formKey,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'Inspection Date',
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: TextFormField(
+                                                  readOnly: true,
+                                                  controller: _date,
+                                                  autocorrect: false,
+                                                  validator: RequiredValidator(
+                                                      errorText:
+                                                          "Please enter a valid date."),
+                                                  onTap: () async {
+                                                    DateTime? newDate =
+                                                        await showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(1900),
+                                                      lastDate: DateTime(2023),
+                                                    );
+                                                    //if cancel null is returned
+                                                    if (newDate == null) return;
+
+                                                    //if newDate is not null then set the date
+                                                    setState(() {
+                                                      date = newDate;
+                                                      print(date.toString());
+                                                      // _date.value = TextEditingValue(text: date.toString());
+                                                      _date.text =
+                                                          DateFormat.yMd()
+                                                              .format(date);
+                                                    });
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    hintText: 'Pick a Date',
+                                                    suffixIcon: Icon(
+                                                      Icons.calendar_today,
+                                                    ),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ElevatedButton(
+                                                    child: Text("Send Request"),
+                                                    onPressed: () async {
+                                                      if (_formKey.currentState!
+                                                          .validate()) {
+                                                        var inspectiondate =
+                                                            _date.text
+                                                                .toString();
+
+                                                        final toEmail =
+                                                            _ownerEmail;
+                                                        final subject =
+                                                            'Permission to visit site for Inspection';
+                                                        final body =
+                                                            'Dear Sir/Madam,\n\nI would like to visit your site \n(${widget.propertyModel.name}) \nlocated at ${widget.propertyModel.streetaddress} \nfor inspection on $inspectiondate . \n\nPlease provide me with a viable time for inspection.\n\nRegards,\n$_userName $_lastName \n';
+                                                        final url =
+                                                            'mailto:$toEmail?subject=$subject&body=$body';
+
+                                                        if (await canLaunch(
+                                                            url)) {
+                                                          await launch(url);
+                                                        } else {
+                                                          throw 'Could not launch $url';
+                                                        }
+                                                        _date.clear();
+                                                      }
+                                                    }),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          },
+                        )
                       ],
                     ),
 
@@ -672,12 +817,12 @@ class _PropertyDetailsState extends State<PropertyDetails> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             decoration: const BoxDecoration(
               color: Color.fromARGB(255, 136, 131, 204),
               shape: BoxShape.circle,
             ),
-            child: Icon(iconData, size: 24, color: Colors.white),
+            child: Icon(iconData, size: 26, color: Colors.white),
           ),
           const SizedBox(
             width: 10,

@@ -49,6 +49,8 @@ class _ExpandedRecommendationCardState
   Widget build(BuildContext context) {
     var images = json.decode(widget.propertyModel.image);
     List list = images;
+    String status = '${widget.propertyModel.status}';
+
     return GestureDetector(
       onTap: () {
         Navigator.pushReplacement(
@@ -88,7 +90,9 @@ class _ExpandedRecommendationCardState
                 left: 0,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 241, 98, 88),
+                    color: status == 'For Rent'
+                        ? Colors.blue[800]
+                        : Colors.green[600],
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(10),
                       bottomRight: Radius.circular(10),
@@ -97,7 +101,7 @@ class _ExpandedRecommendationCardState
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
-                      '${widget.propertyModel.type} ${widget.propertyModel.status}',
+                      status,
                       style: GoogleFonts.lato(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

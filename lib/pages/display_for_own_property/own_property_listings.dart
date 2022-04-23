@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:login/pages/display_for_all_property/all_expanded_recommendation_card_listings.dart';
+
 import 'package:login/pages/display_for_own_property/own_expanded_reccomendation_card.dart';
 import '../../models/property_model.dart';
 import '../../property_feature/get_own_property.dart';

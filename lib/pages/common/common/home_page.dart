@@ -9,10 +9,7 @@ import 'package:login/property_feature/get_all_property.dart';
 import 'package:login/pages/display_for_all_property/all_property_listings_page.dart';
 import 'package:login/pages/widgets/drawer.dart';
 import 'package:login/pages/display_for_all_property/all_recomendadation_card_home.dart';
-import 'package:login/provider/theme_provider.dart';
 import 'package:login/token_shared_preferences.dart';
-
-import '../../display_for_all_property/all_property_details_page.dart';
 import '../../display_for_all_property/land_property_listings.dart';
 
 class HomePage extends StatefulWidget {
@@ -59,6 +56,7 @@ class _HomePageState extends State<HomePage> {
         await TokenSharedPrefernces.instance.getNameValue('lastName');
     final emailPrefs =
         await TokenSharedPrefernces.instance.getNameValue('email');
+
     setState(() {
       _userName = prefs;
       _email = emailPrefs;
@@ -84,7 +82,7 @@ class _HomePageState extends State<HomePage> {
   String greetingMessage() {
     var timeNow = DateTime.now().hour;
 
-    if (timeNow < 12) {
+    if (timeNow <= 12) {
       return 'Good Morning,\n';
     } else if ((timeNow > 12) && (timeNow <= 16)) {
       return 'Good Afternoon,\n';
@@ -373,7 +371,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        // backgroundColor: Color.fromARGB(255, 157, 116, 229),
+        // backgroundColor: const Color(0xff857EF5),
         child: Icon(
           Icons.add,
           size: 30,

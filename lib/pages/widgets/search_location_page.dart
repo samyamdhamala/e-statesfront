@@ -36,8 +36,8 @@ class _SearchLocationPageState extends State<SearchLocationPage> {
         controller: controller,
         topWidgetPicker: Padding(
           padding: const EdgeInsets.only(
-            top: 56,
-            left: 8,
+            top: 10,
+            left: 5,
             right: 8,
           ),
           child: Column(
@@ -48,7 +48,8 @@ class _SearchLocationPageState extends State<SearchLocationPage> {
                     style: TextButton.styleFrom(),
                     onPressed: () => Navigator.of(context).pop(),
                     child: Icon(
-                      Icons.arrow_back_ios,
+                      Icons.arrow_back,
+                      size: 35,
                       color: Colors.deepPurple,
                     ),
                   ),
@@ -61,6 +62,7 @@ class _SearchLocationPageState extends State<SearchLocationPage> {
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.search,
+                          size: 28,
                           color: Colors.deepPurple,
                         ),
                         suffix: ValueListenableBuilder<TextEditingValue>(
@@ -87,13 +89,13 @@ class _SearchLocationPageState extends State<SearchLocationPage> {
                         ),
                         focusColor: Colors.black,
                         filled: true,
-                        hintText: "search",
+                        hintText: "search your area",
                         hintStyle: TextStyle(
                           color: Color.fromARGB(251, 0, 0, 0),
                         ),
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
-                        fillColor: Colors.grey[300],
+                        fillColor: Colors.grey[400],
                         errorBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),

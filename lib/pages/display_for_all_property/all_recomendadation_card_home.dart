@@ -107,7 +107,7 @@ class _RecommendationCardState extends State<RecommendationCard> {
                       height: 5,
                     ),
                     Text(
-                      "Rs ${widget.propertyModel.price}/- only ",
+                      "Rs. ${widget.propertyModel.price}/- only ",
                       style: TextStyle(
                         fontSize: 14,
                       ),

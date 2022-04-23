@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login/api/endpoint.dart';
 import 'package:login/pages/display_for_own_property/own_property_details.dart';
 import 'package:login/pages/display_for_own_property/own_property_listings.dart';
@@ -116,7 +117,7 @@ class _OwnExpandedRecommendationCardState
                       height: 8,
                     ),
                     Text(
-                      "Rs ${widget.propertyModel.price}/- only ",
+                      "Rs. ${widget.propertyModel.price}/- only ",
                       style: GoogleFonts.lato(
                         color: Colors.deepPurpleAccent,
                         fontSize: 16,
@@ -166,8 +167,14 @@ class _OwnExpandedRecommendationCardState
                               ).deleteOwnProperty();
                               debugPrint("This is data ${data}");
                               if (data == "success") {
-                                debugPrint("This is data ${data}");
-                                Navigator.pop(context);
+                                Fluttertoast.showToast(
+                                    msg: "Deleted Sucessfully",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red[200],
+                                    textColor: Colors.black,
+                                    fontSize: 14.0);
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                                 Navigator.push(
@@ -175,11 +182,6 @@ class _OwnExpandedRecommendationCardState
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           OwnPropertyListings()),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Deleted Successfully'),
-                                  ),
                                 );
                               }
                             },

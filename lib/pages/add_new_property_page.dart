@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:login/pages/widgets/search_location_page.dart';
+import 'package:login/pages/display_for_all_property/all_property_listings_page.dart';
+import 'package:login/pages/display_for_own_property/own_property_listings.dart';
 import 'package:login/property_feature/property_post_method.dart';
-import 'common/common/home_page.dart';
 
 class AddProperty extends StatefulWidget {
   const AddProperty({Key? key}) : super(key: key);
@@ -28,7 +29,6 @@ class _AddPropertyState extends State<AddProperty> {
   // Future getImage() async {
   //   try {
   //     final _image = await ImagePicker().pickImage(source: ImageSource.gallery);
-  //     // final _image = await ImagePicker().pickMultiImage();
   //     if (_image == null) {
   //       return;
   //     }
@@ -675,17 +675,19 @@ class _AddPropertyState extends State<AddProperty> {
                         ).createProperty();
                         debugPrint('This is the sucess data ${data}');
                         if (data == "Sucess") {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Posted Successfully'),
-                            ),
-                          );
-                          Navigator.pop(context);
+                          Fluttertoast.showToast(
+                              msg: "Property Posted Sucessfully",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.greenAccent[100],
+                              textColor: Colors.black,
+                              fontSize: 14.0);
                           Navigator.pop(context);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()));
+                                  builder: (context) => OwnPropertyListings()));
                         } else {
                           AlertDialog alert = AlertDialog(
                             title: const Text('Invalid Details'),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:login/models/property_model.dart';
@@ -97,7 +98,14 @@ class _OwnPropertyDetailsState extends State<OwnPropertyDetails> {
                                 ).deleteOwnProperty();
                                 debugPrint("This is data ${data}");
                                 if (data == "success") {
-                                  debugPrint("This is data ${data}");
+                                  Fluttertoast.showToast(
+                                      msg: "Deleted Sucessfully",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red[200],
+                                      textColor: Colors.black,
+                                      fontSize: 14.0);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
@@ -106,11 +114,6 @@ class _OwnPropertyDetailsState extends State<OwnPropertyDetails> {
                                       new MaterialPageRoute(
                                           builder: (context) =>
                                               new OwnPropertyListings()));
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Deleted Successfully'),
-                                    ),
-                                  );
                                 }
                               },
                             ),
@@ -207,13 +210,18 @@ class _OwnPropertyDetailsState extends State<OwnPropertyDetails> {
                             children: [
                               specWidget(
                                 context,
-                                LineIcons.dollarSign,
-                                "Rs ${widget.propertyModel.price}/- only",
+                                LineIcons.areaChart,
+                                widget.propertyModel.area,
                               ),
                               specWidget(
                                 context,
-                                LineIcons.areaChart,
-                                widget.propertyModel.area,
+                                LineIcons.indianRupeeSign,
+                                "Rs. ${widget.propertyModel.price}",
+                              ),
+                              specWidget(
+                                context,
+                                LineIcons.eye,
+                                widget.propertyModel.status,
                               ),
                             ],
                           ),
@@ -443,12 +451,12 @@ class _OwnPropertyDetailsState extends State<OwnPropertyDetails> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             decoration: const BoxDecoration(
               color: Color.fromARGB(255, 136, 131, 204),
               shape: BoxShape.circle,
             ),
-            child: Icon(iconData, size: 24, color: Colors.white),
+            child: Icon(iconData, size: 26, color: Colors.white),
           ),
           const SizedBox(
             width: 10,

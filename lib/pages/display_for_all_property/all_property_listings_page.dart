@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:login/pages/display_for_all_property/all_expanded_recommendation_card_listings.dart';
-import 'package:login/pages/display_for_all_property/all_recomendadation_card_home.dart';
 import '../../models/property_model.dart';
 import '../../property_feature/get_all_property.dart';
 

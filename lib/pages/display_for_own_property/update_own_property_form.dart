@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:login/models/property_model.dart';
-import 'package:login/pages/common/common/home_page.dart';
 import 'package:login/pages/display_for_own_property/own_property_listings.dart';
-import 'package:login/property_feature/property_post_method.dart';
 import 'package:login/property_feature/update_own_property.dart';
 
 class UpdateProperty extends StatefulWidget {
@@ -503,11 +501,15 @@ class _UpdatePropertyState extends State<UpdateProperty> {
                         ).updateProperty();
                         debugPrint('This is the sucess data ${data}');
                         if (data == "success") {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Updated Successfully'),
-                            ),
-                          );
+                         
+                          Fluttertoast.showToast(
+                              msg: "Updated Sucessfully",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.greenAccent[100],
+                              textColor: Colors.black,
+                              fontSize: 14.0);
                           Navigator.pop(context);
                           Navigator.pop(context);
                           Navigator.push(

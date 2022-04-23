@@ -51,14 +51,17 @@ class DataSearch extends SearchDelegate<Future<Widget>> {
     'Baneswor',
     'Hattiban',
     'Harisiddhi',
+    'Durbarmarg',
+    'Ekantakuna',
+    'Chandragiri',
   ];
 
   final recentCities = [
     'Thamel',
     'Tikathali',
     'Kupandole',
-    'Kamaladi',
     'Kamalpokhari',
+    'Baneswor',
   ];
 
   @override

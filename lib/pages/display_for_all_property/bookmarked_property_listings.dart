@@ -12,18 +12,22 @@ class BookmarkedPropertyListings extends StatefulWidget {
       _BookmarkedPropertyListingsState();
 }
 
-class _BookmarkedPropertyListingsState extends State<BookmarkedPropertyListings> {
-   List<PropertyModel>? getterData;
+//getbookmarked property function calls data from api
+class _BookmarkedPropertyListingsState
+    extends State<BookmarkedPropertyListings> {
+  List<PropertyModel>? getterData;
   Future<void> getData() async {
     getterData = await GetOwnProperty.getBookmarkedProperty();
     setState(() {});
   }
 
+//initialize the state
   @override
   void initState() {
     super.initState();
     getData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

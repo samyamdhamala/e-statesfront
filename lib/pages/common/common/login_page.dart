@@ -133,14 +133,14 @@ class _MyLoginState extends State<LoginPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            'Forgot Password?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color.fromRGBO(131, 123, 255, 1),
-                              fontSize: 14,
-                            ),
-                          ),
+                          // Text(
+                          //   'Forgot Password?',
+                          //   textAlign: TextAlign.center,
+                          //   style: TextStyle(
+                          //     color: Color.fromRGBO(131, 123, 255, 1),
+                          //     fontSize: 14,
+                          //   ),
+                          // ),
                         ],
                       ),
                       SizedBox(
@@ -154,15 +154,13 @@ class _MyLoginState extends State<LoginPage> {
                                     email: email, password: password)
                                 .createLogin();
                             if (data["message"] == "Success") {
-                              String token = data["token"];
                               String firstName = data["user"]["firstName"];
                               String lastName = data["user"]["lastName"];
                               String email = data["user"]["email"];
+                              String phone = data["user"]["phonenumber"];
                               debugPrint('$email');
                               user = data["user"];
                               String tokenData = data["token"];
-                              debugPrint(
-                                  'This is the token from the login: ${token}');
 
                               TokenSharedPrefernces.instance
                                   .setTokenValue("token", tokenData);
@@ -172,8 +170,9 @@ class _MyLoginState extends State<LoginPage> {
                                   .setNameValue("lastName", lastName);
                               TokenSharedPrefernces.instance
                                   .setEmailValue("email", email);
+                              TokenSharedPrefernces.instance
+                                  .setNameValue("phonenumber", phone);
 
-                              debugPrint(user["firstName"].toString());
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

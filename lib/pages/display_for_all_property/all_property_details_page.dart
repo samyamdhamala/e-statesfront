@@ -28,6 +28,7 @@ class PropertyDetails extends StatefulWidget {
 class _PropertyDetailsState extends State<PropertyDetails> {
   String? _userName;
   String? _lastName;
+  String? _phoneNumber;
   String? _ownerFirstName;
   String? _ownerLastName;
   String? _ownerEmail;
@@ -44,7 +45,22 @@ class _PropertyDetailsState extends State<PropertyDetails> {
     getOwnerContact();
   }
 
-  TextEditingController _date = new TextEditingController();
+  // function to get the requester name and contact details
+  Future<void> setUserName() async {
+    final prefs =
+        await TokenSharedPrefernces.instance.getNameValue('firstName');
+    final lastPrefs =
+        await TokenSharedPrefernces.instance.getNameValue('lastName');
+    final phoneprefs =
+        await TokenSharedPrefernces.instance.getNameValue('phonenumber');
+
+    setState(() {
+      _userName = prefs;
+      _lastName = lastPrefs;
+      _phoneNumber = phoneprefs;
+    });
+  }
+    TextEditingController _date = new TextEditingController();
   Future<dynamic> getOwnerContact() async {
     userDetails = await GetOwnerContact.getOwnerContact(
         widget.propertyModel.customer_id.toString());
@@ -56,20 +72,6 @@ class _PropertyDetailsState extends State<PropertyDetails> {
     });
   }
 
-  Future<void> setUserName() async {
-    final prefs =
-        await TokenSharedPrefernces.instance.getNameValue('firstName');
-    debugPrint("This is the prefs ${prefs}");
-    final lastPrefs =
-        await TokenSharedPrefernces.instance.getNameValue('lastName');
-    debugPrint("This is the lastname ${lastPrefs}");
-
-    setState(() {
-      _userName = prefs;
-      _lastName = lastPrefs;
-   
-    });
-  }
 
   Widget build(BuildContext context) {
     return SafeArea(
@@ -682,7 +684,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                                                       context: context,
                                                       initialDate:
                                                           DateTime.now(),
-                                                      firstDate: DateTime(1900),
+                                                      firstDate: DateTime.now(),
                                                       lastDate: DateTime(2023),
                                                     );
                                                     //if cancel null is returned
@@ -728,7 +730,7 @@ class _PropertyDetailsState extends State<PropertyDetails> {
                                                         final subject =
                                                             'Permission to visit site for Inspection';
                                                         final body =
-                                                            'Dear Sir/Madam,\n\nI would like to visit your site \n(${widget.propertyModel.name}) \nlocated at ${widget.propertyModel.streetaddress} \nfor inspection on $inspectiondate . \n\nPlease provide me with a viable time for inspection.\n\nRegards,\n$_userName $_lastName \n';
+                                                            'Dear Sir/Madam,\n\nI would like to visit your site \n(${widget.propertyModel.name}) \nlocated at ${widget.propertyModel.streetaddress} \nfor inspection on $inspectiondate . \n\nPlease provide me with a viable time for inspection.\n\nRegards,\n$_userName $_lastName \n$_phoneNumber';
                                                         final url =
                                                             'mailto:$toEmail?subject=$subject&body=$body';
 

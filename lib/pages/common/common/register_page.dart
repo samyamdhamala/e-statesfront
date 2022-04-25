@@ -32,7 +32,7 @@ class PageBuilder extends StatefulWidget {
 
 class _PageBuilderState extends State<PageBuilder> {
   bool _obscureText = true;
-  DateTime date = DateTime(2022, 4, 13);
+  DateTime date = DateTime(1980, 4, 20);
 
   TextEditingController _date = new TextEditingController();
 
@@ -121,9 +121,9 @@ class _PageBuilderState extends State<PageBuilder> {
                     onTap: () async {
                       DateTime? newDate = await showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
+                        initialDate: DateTime(1980),
                         firstDate: DateTime(1900),
-                        lastDate: DateTime(2023),
+                        lastDate: DateTime(2004, 12, 31),
                       );
                       //if cancel null is returned
                       if (newDate == null) return;

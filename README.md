@@ -9,22 +9,27 @@ Users can post their properties by providing images, descriptions, and locations
 
 ## Screens
 # Login/Register Screens
-![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/2e9c7afc-9737-4d8b-aada-f5f8c0e88bf0)
+![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/6e987bef-ac2b-4e1f-a456-78cb121c17d3)
 
 # Home and Filter
-![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/e3065dda-8026-4c3a-959f-c0a4b46ff38a)
+![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/ffdc2208-c667-4277-8c1f-e82ca2d42490)
+
 
 # Property Description and listings
-![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/db1e82fb-f650-4909-b812-21f344e08e3c)
+![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/ec8bdd17-2683-424e-965c-e2529a6e0a50)
+
 
 # Search
-![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/72279e2f-08a9-490f-bb43-5511de21b49e)
+![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/aef583d4-eb86-4cb7-8f53-7062d42fea85)
+
 
 # Add Property Form Design and GPS
-![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/490cb0d9-823f-400e-83b1-52c824b1beb7)
+![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/8d2f4a5a-5c78-4975-879c-2fe7d8f0edcc)
+
 
 # Others
-![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/cea36079-5420-4435-b580-718cae086c31)
+![image](https://github.com/samyamdhamala/e-statesfront/assets/72209701/5af02b5f-9864-4e35-aed1-d95a446558c7)
+
 
 
 
